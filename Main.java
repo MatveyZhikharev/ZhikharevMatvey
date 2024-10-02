@@ -9,135 +9,148 @@ enum MoveType {
   swimming;
 }
 
-interface Animal {
-  void eat(String meal);
+abstract class Animal {
+  protected String name;
 
-  void move();
-}
-
-class Zoo {
-  protected String animal;
-  protected MoveType moveType;
-  protected AnimalType animalType;
-
-  public Zoo(String animal, MoveType moveType, AnimalType animalType) {
-    this.animal = animal;
-    this.moveType = moveType;
-    this.animalType = animalType;
+  public Animal(String name) {
+    this.name = name;
   }
 }
 
-class Horse extends Zoo implements Animal {
-  public Horse(String animal, MoveType moveType, AnimalType animalType) {
-    super(animal, moveType, animalType);
+abstract class Predator extends Animal {
+  public Predator(String name) {
+    super(name);
   }
 
-  @Override
+  public void killFood() {
+    System.out.println(this.name + " killed a herbivorous for a breakfast");
+  }
+}
+
+abstract class Herbivorous extends Animal {
+  public Herbivorous(String name) {
+    super(name);
+  }
+}
+
+interface flyable {
+  void fly();
+}
+
+interface walkable {
+  void walk();
+}
+
+interface swimmable {
+  void swim();
+}
+
+class Horse extends Herbivorous implements walkable {
+  public Horse(String name) {
+    super(name);
+  }
+
   public void eat(String meal) {
     if (meal.equals("Grass")) {
-      System.out.println(animal + " is eating");
+      System.out.println(name + " is eating");
     } else {
-      System.out.println(animal + " doesn't eat " + meal + "😥");
+      System.out.println(name + " doesn't eat " + meal + "😥");
     }
   }
 
   @Override
-  public void move() {
-    System.out.println("Horse is " + moveType);
+  public void walk() {
+    System.out.println("tigidik-tigidik-tigidik");
   }
 }
 
-class Camel extends Zoo implements Animal {
-  public Camel(String animal, MoveType moveType, AnimalType animalType) {
-    super(animal, moveType, animalType);
+class Camel extends Herbivorous implements walkable {
+  public Camel(String name) {
+    super(name);
   }
 
-  @Override
   public void eat(String meal) {
     if (meal.equals("Grass")) {
-      System.out.println(animal + " is eating");
+      System.out.println(name + " is eating");
     } else {
-      System.out.println(animal + " doesn't eat " + meal + "😥");
+      System.out.println(name + " doesn't eat " + meal + "😥");
     }
   }
 
   @Override
-  public void move() {
-    System.out.println("Camel is " + moveType);
+  public void walk() {
+    System.out.println("camel makes tigidik-tigidik-tigidik");
   }
 }
 
-class Tiger extends Zoo implements Animal {
-  public Tiger(String animal, MoveType moveType, AnimalType animalType) {
-    super(animal, moveType, animalType);
+class Tiger extends Predator implements walkable {
+  public Tiger(String name) {
+    super(name);
   }
 
-  @Override
   public void eat(String meal) {
     if (meal.equals("Beef")) {
-      System.out.println(animal + " is eating");
+      System.out.println(name + " is eating");
     } else {
-      System.out.println(animal + " doesn't eat " + meal + "😥");
+      System.out.println(name + " doesn't eat " + meal + "😥");
     }
   }
 
   @Override
-  public void move() {
-    System.out.println("Tiger is " + moveType);
+  public void walk() {
+    System.out.println("Tiger is walking");
   }
 }
 
-class Dolphin extends Zoo implements Animal {
-  public Dolphin(String animal, MoveType moveType, AnimalType animalType) {
-    super(animal, moveType, animalType);
+class Dolphin extends Predator implements swimmable {
+  public Dolphin(String name) {
+    super(name);
   }
 
-  @Override
   public void eat(String meal) {
     if (meal.equals("Fish")) {
-      System.out.println(animal + " is eating");
+      System.out.println(name + " is eating");
     } else {
-      System.out.println(animal + " doesn't eat " + meal + "😥");
+      System.out.println(name + " doesn't eat " + meal + "😥");
     }
   }
 
   @Override
-  public void move() {
-    System.out.println("Dolphin is " + moveType);
+  public void swim() {
+    System.out.println("Dolphin is swimming whoooooshhhhhhhhhhbllbll");
   }
 }
 
-class Eagle extends Zoo implements Animal {
-  public Eagle(String animal, MoveType moveType, AnimalType animalType) {
-    super(animal, moveType, animalType);
+class Eagle extends Predator implements flyable {
+  public Eagle(String name) {
+    super(name);
   }
 
-  @Override
   public void eat(String meal) {
     if (meal.equals("Meat")) {
-      System.out.println(animal + " is eating");
+      System.out.println(name + " is eating");
     } else {
-      System.out.println(animal + " doesn't eat " + meal + "😥");
+      System.out.println(name + " doesn't eat " + meal + "😥");
     }
   }
 
   @Override
-  public void move() {
-    System.out.println("Eagle is " + moveType);
+  public void fly() {
+    System.out.println("Eagle is flying HEEEEEEEEEEEEEEEEEEEEEEEEEEEOW");
   }
 }
 
 public class Main {
   public static void main(String[] args) {
-    Eagle eagle = new Eagle("Арёл", MoveType.flying, AnimalType.Predator);
+    Eagle eagle = new Eagle("Арёл");
     eagle.eat("Grass");
     eagle.eat("Meat");
-    eagle.move();
-    Camel camel = new Camel("CameЦ", MoveType.walking, AnimalType.Predator);
+    eagle.fly();
+    Camel camel = new Camel("CameЦ");
     camel.eat("Beef");
-    camel.move();
-    Tiger tiger = new Tiger("Тигр", MoveType.walking, AnimalType.Predator);
+    camel.walk();
+    Tiger tiger = new Tiger("Тигр");
     tiger.eat("Beef");
-    tiger.move();
+    tiger.walk();
   }
 }
