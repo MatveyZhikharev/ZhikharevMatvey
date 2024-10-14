@@ -11,8 +11,8 @@ public class SorterTest {
   @Test
   public void testSort() throws Exception {
     Sorter sorter = new Sorter();
-    sorter.addAlgorithm(new MergeSort());
-    sorter.addAlgorithm(new BubbleSort());
+    sorter.addAlgorithm(new MergeSort(10));
+    sorter.addAlgorithm(new BubbleSort(10));
 
     List<Integer> list = Arrays.asList(24, 8, 2007, 3000, 50);
     List<Integer> sortedList = sorter.sort(list);

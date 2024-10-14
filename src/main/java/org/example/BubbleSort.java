@@ -4,8 +4,16 @@ import java.util.Arrays;
 import java.util.List;
 
 public class BubbleSort implements SortingAlgorithm{
+  private int sizeLimit;
+
+  public BubbleSort(int sizeL) {
+    sizeLimit = sizeL;
+  }
   @Override
-  public List<Integer> sort(List<Integer> list) {
+  public List<Integer> sort(List<Integer> list) throws Exception {
+    if (list.size() > sizeLimit) {
+      throw new Exception("Size limit exceeded for Bubble Sort");
+    }
     Integer[] arr = new Integer[list.size()];
     list.toArray(arr);
     for (int i = 0; i < arr.length; i++) {
