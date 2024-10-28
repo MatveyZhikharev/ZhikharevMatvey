@@ -1,6 +1,5 @@
 package org.example;
 
-import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -8,7 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
 
-public class ApplicationTest extends TestCase {
+import static org.junit.Assert.assertEquals;
+
+public class ApplicationTest {
   @Test
   void enrich() {
     UserRepository repository = new MapUserRepository();
