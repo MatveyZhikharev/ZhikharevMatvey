@@ -11,17 +11,22 @@ public class EnrichmentServiceTest {
   @Test
   void enrich() {
     final EnrichmentService service = new EnrichmentService();
-    service.addEnrichment(Message.EnrichmentType.MSISDN, new EnrichmentService.Enrichment() {
+    service.addEnrichment(Message.EnrichmentType.MSISDN, new Enrichment() {
       @Override
       public Map<String, String> enrich(Map<String, String> content) {
         content.put("first_name", "Username");
         content.put("last_name", "Usernameov");
+        content.put("msisdn", "89528120000");
         return content;
       }
     });
 
+    MapUserRepository users = new MapUserRepository();
+    users.updateUserByMsisdn("89528120000", new User("Username", "Usernamov"));
+
     Message expected = new Message(
         Map.of("user", "test",
+            "msisdn", "89528120000",
             "first_name", "Username",
             "last_name", "Usernameov"),
         Message.EnrichmentType.MSISDN);
