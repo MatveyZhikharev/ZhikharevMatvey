@@ -2,6 +2,7 @@ package org.example;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -13,16 +14,19 @@ public class EnrichmentServiceTest {
     service.addEnrichment(Message.EnrichmentType.MSISDN, new EnrichmentService.Enrichment() {
       @Override
       public Map<String, String> enrich(Map<String, String> content) {
-        content.put("msisdn_enriched", "true");
+        content.put("first_name", "Username");
+        content.put("last_name", "Usernameov");
         return content;
       }
     });
 
     Message expected = new Message(
-        Map.of("test", "test", "msisdn_enriched", "true"),
+        Map.of("user", "test",
+            "first_name", "Username",
+            "last_name", "Usernameov"),
         Message.EnrichmentType.MSISDN);
     Message actual = service.enrich(new Message(
-        Map.of("test", "test"),
+        Map.of("user", "test"),
         Message.EnrichmentType.MSISDN));
 
     assertEquals(expected, actual);
