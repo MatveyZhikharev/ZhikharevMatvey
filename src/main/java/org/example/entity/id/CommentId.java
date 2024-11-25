@@ -7,6 +7,10 @@ public class CommentId {
     this.id = id;
   }
 
+  public CommentId incrementAndGet() {
+    return new CommentId(id + 1);
+  }
+
   @Override
   public String toString() {
     return Long.toString(id);
