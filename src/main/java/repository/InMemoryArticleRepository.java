@@ -2,13 +2,14 @@ package repository;
 
 import org.example.entity.Article;
 import org.example.entity.id.ArticleId;
+import repository.exceptions.ArticleNotFoundException;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class InMemoryArticleRepository implements ArticleRepository {
   private ArticleId nextId = new ArticleId(0);
-  private final Map<Long, Article> articleMap = new ConcurrentHashMap<>();
+  private final Map<ArticleId, Article> articleMap = new ConcurrentHashMap<>();
 
   @Override
   public ArticleId generateId() {
@@ -22,7 +23,11 @@ public class InMemoryArticleRepository implements ArticleRepository {
 
   @Override
   public Article findById(ArticleId id) {
-    return null;
+    Article article = articleMap.get(id);
+    if (article == null) {
+      throw new ArticleNotFoundException("Cannot find a book with id = " + id);
+    }
+    return article;
   }
 
   @Override
