@@ -13,7 +13,9 @@ public class InMemoryArticleRepository implements ArticleRepository {
 
   @Override
   public ArticleId generateId() {
-    return nextId.incrementAndGet();
+    nextId = nextId.incrementAndGet();
+    return nextId;
+
   }
 
   @Override
@@ -25,7 +27,7 @@ public class InMemoryArticleRepository implements ArticleRepository {
   public Article findById(ArticleId id) {
     Article article = articleMap.get(id);
     if (article == null) {
-      throw new ArticleNotFoundException("Cannot find a book with id = " + id);
+      throw new ArticleNotFoundException("Cannot find an article with id = " + id);
     }
     return article;
   }
