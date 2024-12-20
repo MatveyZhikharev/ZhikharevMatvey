@@ -398,6 +398,81 @@ class ApplicationTest {
         );
     assertEquals(201, newResponse.statusCode());
   }
+  @Test
+  void should201CommentUpdate() throws Exception {
+    ObjectMapper objectMapper = new ObjectMapper();
+    final ArticleRepository articleRepository = new InMemoryArticleRepository();
+    final CommentRepository commentRepository = new InMemoryCommentRepository();
+    final CommentService commentService = new CommentService(commentRepository);
+    final ArticleService articleService = new ArticleService(articleRepository);
+
+    Application application = new Application(
+        List.of(
+            new ArticleController(
+                service,
+                articleService,
+                objectMapper
+            ),
+            new CommentController(
+                service,
+                commentService,
+                objectMapper
+            ),
+            new ArticleFreemarkerController(
+                service,
+                articleService,
+                TemplateFactory.freeMarkerEngine()
+            )
+        )
+    );
+    application.start();
+    service.awaitInitialization();
+
+
+    HttpResponse<String> response = HttpClient.newHttpClient()
+        .send(
+            HttpRequest.newBuilder()
+                .POST(
+                    HttpRequest.BodyPublishers.ofString(
+                        """
+                            { "title": "Test", "tags": ["first", "second", "third"] }"""
+                    )
+                )
+                .uri(URI.create("http://localhost:%d/api/article".formatted(service.port())))
+                .build(),
+            HttpResponse.BodyHandlers.ofString(UTF_8)
+        );
+    assertEquals(201, response.statusCode());
+    HttpResponse<String> commentResponse = HttpClient.newHttpClient()
+        .send(
+            HttpRequest.newBuilder()
+                .POST(
+                    HttpRequest.BodyPublishers.ofString(
+                        """
+                            { "articleId": 1, "text": "GOYDAAAA"}"""
+                    )
+                )
+                .uri(URI.create("http://localhost:%d/api/comment".formatted(service.port())))
+                .build(),
+            HttpResponse.BodyHandlers.ofString(UTF_8)
+        );
+    assertEquals(201, commentResponse.statusCode());
+
+    HttpResponse<String> newResponse = HttpClient.newHttpClient()
+        .send(
+            HttpRequest.newBuilder()
+                .POST(
+                    HttpRequest.BodyPublishers.ofString(
+                        """
+                            { "articleId": 1, "text": "GOYDAAAA"}"""
+                    )
+                )
+                .uri(URI.create("http://localhost:%d/api/comment".formatted(service.port())))
+                .build(),
+            HttpResponse.BodyHandlers.ofString(UTF_8)
+        );
+    assertEquals(201, newResponse.statusCode());
+  }
 
   @Test
   void should201CommentDelete() throws Exception {
