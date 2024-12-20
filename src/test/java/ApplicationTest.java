@@ -464,14 +464,14 @@ class ApplicationTest {
                 .POST(
                     HttpRequest.BodyPublishers.ofString(
                         """
-                            { "articleId": 1, "text": "GOYDAAAA"}"""
+                            { "text": "GOYDA"}"""
                     )
                 )
-                .uri(URI.create("http://localhost:%d/api/comment".formatted(service.port())))
+                .uri(URI.create("http://localhost:%d/api/comment/update/1".formatted(service.port())))
                 .build(),
             HttpResponse.BodyHandlers.ofString(UTF_8)
         );
-    assertEquals(201, newResponse.statusCode());
+    assertEquals(200, newResponse.statusCode());
   }
 
   @Test
