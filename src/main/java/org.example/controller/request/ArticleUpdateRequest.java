@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 public record ArticleUpdateRequest(
-    @JsonProperty ArticleId articleId,
-    @JsonProperty String name,
-    @JsonProperty Set<String> tags,
-    @JsonProperty List<String> comments) {}
+    ArticleId articleId,
+    String title,
+    Set<String> tags,
+    List<String> comments) {}

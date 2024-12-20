@@ -5,6 +5,7 @@ import org.example.controller.request.ArticleCreateRequest;
 import org.example.controller.request.ArticleUpdateRequest;
 import org.example.controller.request.CommentCreateRequest;
 import org.example.controller.request.CommentUpdateRequest;
+import org.example.controller.response.CommentCreateResponse;
 import org.example.controller.response.ErrorResponse;
 import org.example.entity.Article;
 import org.example.entity.Comment;
@@ -95,7 +96,7 @@ public class CommentController implements Controller {
             CommentId commentId = commentService.create(commentCreateRequest.articleId(), commentCreateRequest.text());
             LOG.debug("Comment created successfully: {}", commentId);
             response.status(201);
-            return objectMapper.writeValueAsString(commentId);
+            return objectMapper.writeValueAsString(new CommentCreateResponse(commentId));
           } catch (CommentCreateException e) {
             LOG.warn("CommentCreateException on commentService.create()", e);
             response.status(400);

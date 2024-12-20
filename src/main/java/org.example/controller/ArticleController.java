@@ -3,6 +3,7 @@ package org.example.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.controller.request.ArticleCreateRequest;
 import org.example.controller.request.ArticleUpdateRequest;
+import org.example.controller.response.ArticleCreateResponse;
 import org.example.controller.response.ErrorResponse;
 import org.example.entity.Article;
 import org.example.entity.Comment;
@@ -112,7 +113,7 @@ public class ArticleController implements Controller {
             ArticleId articleId = articleService.create(articleCreateRequest.title(), articleCreateRequest.tags());
             LOG.debug("Article created successfully: {}", articleId);
             response.status(201);
-            return objectMapper.writeValueAsString(articleId);
+            return objectMapper.writeValueAsString(new ArticleCreateResponse(articleId));
           } catch (ArticleCreateException e) {
             LOG.warn("ArticleCreateException on articleService.create()", e);
             response.status(400);
@@ -136,7 +137,7 @@ public class ArticleController implements Controller {
             }
             articleService.update(
                 articleId,
-                articleUpdateRequest.name(),
+                articleUpdateRequest.title(),
                 articleUpdateRequest.tags(),
                 commentList
             );

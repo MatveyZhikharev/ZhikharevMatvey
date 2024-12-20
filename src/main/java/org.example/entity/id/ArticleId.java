@@ -1,7 +1,9 @@
 package org.example.entity.id;
 
+import java.util.Objects;
+
 public class ArticleId {
-  private final long id;
+  public final long id;
 
   public ArticleId(long id) {
     this.id = id;
@@ -22,5 +24,10 @@ public class ArticleId {
       return false;
     }
     return id == ((ArticleId) obj).id;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(id);
   }
 }

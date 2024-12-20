@@ -5,6 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Set;
 
 public record ArticleCreateRequest(
-    @JsonProperty String title,
-    @JsonProperty Set<String> tags) {
+    String title,
+    Set<String> tags) {
 }

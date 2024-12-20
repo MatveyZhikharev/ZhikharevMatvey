@@ -15,11 +15,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import spark.Service;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
+
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -74,7 +76,7 @@ class ApplicationTest {
                 .POST(
                     HttpRequest.BodyPublishers.ofString(
                         """
-                            { "name": "Test", "tags": ["first", "second", "third"] }"""
+                            { "title": "Test", "tags": ["first", "second", "third"] }"""
                     )
                 )
                 .uri(URI.create("http://localhost:%d/api/article".formatted(service.port())))
@@ -123,7 +125,7 @@ class ApplicationTest {
                 .POST(
                     HttpRequest.BodyPublishers.ofString(
                         """
-                            { "name": "Test", "tags": ["first", "second", "third"] }"""
+                            { "title": "Test", "tags": ["first", "second", "third"] }"""
                     )
                 )
                 .uri(URI.create("http://localhost:%d/api/article".formatted(service.port())))
@@ -138,7 +140,18 @@ class ApplicationTest {
                 .POST(
                     HttpRequest.BodyPublishers.ofString(
                         """
-                            { "name": "newTest", "tags": ["newFirst", "newSecond", "newThird"], "comments" : ["java", "python"] }  """
+                            {
+                            "title": "newTest",
+                            "tags": [
+                              "newFirst",
+                              "newSecond",
+                              "newThird"
+                            ],
+                            "comments": [
+                              "java",
+                              "python"
+                            ]
+                            }"""
                     )
                 )
                 .uri(URI.create("http://localhost:%d/api/article/update/1".formatted(service.port())))
@@ -185,7 +198,7 @@ class ApplicationTest {
                 .POST(
                     HttpRequest.BodyPublishers.ofString(
                         """
-                            { "name": "Test", "tags": ["first", "second", "third"] }"""
+                            { "title": "Test", "tags": ["first", "second", "third"] }"""
                     )
                 )
                 .uri(URI.create("http://localhost:%d/api/article".formatted(service.port())))
@@ -243,7 +256,7 @@ class ApplicationTest {
                 .POST(
                     HttpRequest.BodyPublishers.ofString(
                         """
-                            { "name": "Test", "tags": ["first", "second", "third"] }"""
+                            { "title": "Test", "tags": ["first", "second", "third"] }"""
                     )
                 )
                 .uri(URI.create("http://localhost:%d/api/article".formatted(service.port())))
@@ -259,7 +272,7 @@ class ApplicationTest {
                 .POST(
                     HttpRequest.BodyPublishers.ofString(
                         """
-                            { "name": "NewTest", "tags": ["first2", "second2", "third2"], "comments" : ["java", "python"] }  """
+                            { "title": "NewTest", "tags": ["first2", "second2", "third2"], "comments" : ["java", "python"] }"""
                     )
                 )
                 .uri(URI.create("http://localhost:%d/api/article/update/666".formatted(service.port())))
@@ -306,7 +319,7 @@ class ApplicationTest {
                 .POST(
                     HttpRequest.BodyPublishers.ofString(
                         """
-                            { "name": "Test", "tags": ["first", "second", "third"] }"""
+                            { "title": "Test", "tags": ["first", "second", "third"] }"""
                     )
                 )
                 .uri(URI.create("http://localhost:%d/api/article".formatted(service.port())))
@@ -362,24 +375,24 @@ class ApplicationTest {
                 .POST(
                     HttpRequest.BodyPublishers.ofString(
                         """
-                            { "name": "Test", "tags": ["first", "second", "third"] }"""
+                            { "title": "Test", "tags": ["first", "second", "third"] }"""
                     )
                 )
                 .uri(URI.create("http://localhost:%d/api/article".formatted(service.port())))
                 .build(),
             HttpResponse.BodyHandlers.ofString(UTF_8)
         );
-
+    assertEquals(201, response.statusCode());
     HttpResponse<String> newResponse = HttpClient.newHttpClient()
         .send(
             HttpRequest.newBuilder()
                 .POST(
                     HttpRequest.BodyPublishers.ofString(
                         """
-                            { "comment": "string"}"""
+                            { "articleId": 1, "text": "GOYDAAAA"}"""
                     )
                 )
-                .uri(URI.create("http://localhost:%d/api/article/comment/1".formatted(service.port())))
+                .uri(URI.create("http://localhost:%d/api/comment".formatted(service.port())))
                 .build(),
             HttpResponse.BodyHandlers.ofString(UTF_8)
         );
@@ -423,7 +436,7 @@ class ApplicationTest {
                 .POST(
                     HttpRequest.BodyPublishers.ofString(
                         """
-                            { "name": "Test", "tags": ["first", "second", "third"] }"""
+                            { "title": "Test", "tags": ["first", "second", "third"] }"""
                     )
                 )
                 .uri(URI.create("http://localhost:%d/api/article".formatted(service.port())))
@@ -438,10 +451,10 @@ class ApplicationTest {
                 .POST(
                     HttpRequest.BodyPublishers.ofString(
                         """
-                            { "comment" : "qwerr" }"""
+                            { "articleId" : "1", "text" : "GOYDAAA"}"""
                     )
                 )
-                .uri(URI.create("http://localhost:%d/api/article/comment/1".formatted(service.port())))
+                .uri(URI.create("http://localhost:%d/api/comment".formatted(service.port())))
                 .build(),
             HttpResponse.BodyHandlers.ofString(UTF_8)
         );
@@ -451,10 +464,10 @@ class ApplicationTest {
         .send(
             HttpRequest.newBuilder()
                 .DELETE()
-                .uri(URI.create("http://localhost:%d/api/article/delete/comment/1/1".formatted(service.port())))
+                .uri(URI.create("http://localhost:%d/api/comment/delete/1".formatted(service.port())))
                 .build(),
             HttpResponse.BodyHandlers.ofString(UTF_8)
         );
-    assertEquals(204, newResponse.statusCode());
+    assertEquals(200, newResponse.statusCode());
   }
 }
