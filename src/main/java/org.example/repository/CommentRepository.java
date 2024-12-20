@@ -1,19 +1,19 @@
-package repository;
+package org.example.repository;
 
 import org.example.entity.Comment;
 import org.example.entity.id.CommentId;
 
-import java.util.Set;
+import java.util.HashSet;
 
 public interface CommentRepository {
   CommentId generateId();
 
-  Set<String> findAll();
+  HashSet<Comment> findAll();
   Comment findById(CommentId id);
 
-  void create(Comment article);
+  void create(Comment comment);
 
-  void update(Comment article);
+  void update(Comment comment);
 
   void delete(CommentId id);
 }

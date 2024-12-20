@@ -17,4 +17,16 @@ public class Comment {
   public Comment withText(String text) {
     return new Comment(this.id, this.articleId, text);
   }
+
+  public String getText() {
+    return text;
+  }
+
+  public CommentId getId() {
+    return id;
+  }
+
+  public ArticleId getArticleId() {
+    return articleId;
+  }
 }

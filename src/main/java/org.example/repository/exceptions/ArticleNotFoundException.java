@@ -1,4 +1,4 @@
-package repository.exceptions;
+package org.example.repository.exceptions;
 
 public class ArticleNotFoundException extends RuntimeException {
   public ArticleNotFoundException(String message) {

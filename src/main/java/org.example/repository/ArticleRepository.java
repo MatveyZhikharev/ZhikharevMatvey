@@ -1,4 +1,4 @@
-package repository;
+package org.example.repository;
 
 import org.example.entity.Article;
 import org.example.entity.id.ArticleId;
