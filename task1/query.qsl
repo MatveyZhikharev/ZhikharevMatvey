@@ -1,0 +1,4 @@
+SELECT 
+  COUNT(DISTINCT profile.profile_id) FROM profile
+LEFT OUTER JOIN post ON post.profile_id = profile.profile_id
+WHERE post.profile_id IS NULL
