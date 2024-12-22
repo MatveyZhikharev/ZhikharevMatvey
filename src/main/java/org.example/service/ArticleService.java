@@ -11,7 +11,6 @@ import org.example.repository.exceptions.ArticleNotFoundException;
 import org.example.service.exceptions.ArticleUpdateException;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 public class ArticleService {

@@ -16,7 +16,7 @@ public class Article {
     this.title = title;
     this.tags = tags;
     this.comments = comments;
-    this.trending = comments.size() >= 3;
+    this.trending = comments != null && comments.size() >= 3;
   }
 
   public Article withTags(Set<String> tags) {

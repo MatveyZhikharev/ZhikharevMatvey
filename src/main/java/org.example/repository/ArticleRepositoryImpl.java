@@ -26,7 +26,7 @@ public class ArticleRepositoryImpl implements ArticleRepository {
     Optional<Long> value;
 
     try (Handle handle = jdbi.open()) {
-      value = Optional.ofNullable((Long) handle.createQuery("SELECT nextval('article_article_id_seq') AS value FOR UPDATE")
+      value = Optional.ofNullable((Long) handle.createQuery("SELECT nextval('article_id_seq') AS value FOR UPDATE")
           .mapToMap()
           .first()
           .get("value"));
@@ -43,13 +43,13 @@ public class ArticleRepositoryImpl implements ArticleRepository {
       articles = handle.createQuery("SELECT * FROM article FOR UPDATE")
           .map((rs, ctx) ->
               new Article(
-                  rs.getLong("article_id"),
+                  rs.getLong("id"),
                   rs.getString("title"),
                   Stream.of((String[]) rs.getArray("tags").getArray())
                       .collect(Collectors.toSet()),
                   rs.getArray("comments_id") == null ? new ArrayList<>() :
                       Stream.of((Long[]) rs.getArray("comments_id").getArray())
-                          .map(x -> new Comment(x.longValue(), (String) handle.createQuery("SELECT * FROM comment WHERE comment_id = :comment_id FOR UPDATE")
+                          .map(x -> new Comment(x.longValue(), (String) handle.createQuery("SELECT * FROM comment WHERE id=:comment_id FOR UPDATE")
                               .bind("comment_id", x)
                               .mapToMap()
                               .first()
@@ -67,10 +67,10 @@ public class ArticleRepositoryImpl implements ArticleRepository {
     Article article;
 
     try (Handle handle = jdbi.open()) {
-      ResultIterable<Article> result = handle.createQuery("SELECT * FROM article WHERE article_id = :article_id FOR UPDATE")
+      ResultIterable<Article> result = handle.createQuery("SELECT * FROM article WHERE id=:article_id FOR UPDATE")
           .bind("article_id", id)
           .map((rs, ctx) -> new Article(
-                  rs.getLong("article_id"),
+                  rs.getLong("id"),
                   rs.getString("title"),
                   Stream.of((String[]) rs.getArray("tags").getArray())
                       .collect(Collectors.toSet()),
@@ -99,17 +99,17 @@ public class ArticleRepositoryImpl implements ArticleRepository {
     Long article_id;
 
     try (Handle handle = jdbi.open()) {
-      try (Update update = handle.createUpdate("INSERT INTO article (article_id, title, tags, comments_id, trending) VALUES (:article_id, :title, :tags, :comments_id, :trending)")) {
+      try (Update update = handle.createUpdate("INSERT INTO article (id, title, tags, comments_id, trending) VALUES (:article_id, :title, :tags, :comments_id, :trending)")) {
         article_id = (Long) update.bind("article_id", article.getId())
             .bind("title", article.getTitle())
             .bindArray("tags", String.class, article.getTags())
             .bindArray("comments_id", Long.class,
                 article.getComments() == null ? new ArrayList<Long>() : article.getComments())
             .bind("trending", article.getTrending())
-            .executeAndReturnGeneratedKeys("article_id")
+            .executeAndReturnGeneratedKeys("id")
             .mapToMap()
             .first()
-            .get("article_id");
+            .get("id");
       } catch (UnableToExecuteStatementException e) {
         throw new ArticleDuplicateException(e.getMessage(), e);
       }
@@ -121,17 +121,17 @@ public class ArticleRepositoryImpl implements ArticleRepository {
   @Override
   public void update(Article article) throws ArticleNotFoundException {
     try (Handle handle = jdbi.open()) {
-      try (Update update = handle.createUpdate("UPDATE article SET title=:title, tags=:tags, comments_id=:comments_id, trending=:trending WHERE article_id=:article_id")) {
+      try (Update update = handle.createUpdate("UPDATE article SET title=:title, tags=:tags, comments_id=:comments_id, trending=:trending WHERE id=:article_id")) {
         update.bind("article_id", article.getId())
             .bind("title", article.getTitle())
             .bindArray("tags", String.class, article.getTags())
             .bindArray("comments_id", Long.class,
                 article.getComments() == null ? new ArrayList<Long>() : article.getComments())
             .bind("trending", article.getTrending())
-            .executeAndReturnGeneratedKeys("article_id")
+            .executeAndReturnGeneratedKeys("id")
             .mapToMap()
             .first()
-            .get("article_id");
+            .get("id");
       } catch (IllegalStateException e) {
         throw new ArticleNotFoundException(e.getMessage(), e);
       }

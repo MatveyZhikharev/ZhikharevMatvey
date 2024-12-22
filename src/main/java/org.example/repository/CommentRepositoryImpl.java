@@ -23,7 +23,7 @@ public class CommentRepositoryImpl implements CommentRepository {
     Long value;
 
     try (Handle handle = jdbi.open()) {
-      value = (Long) handle.createQuery("SELECT nextval('comment_comment_id_seq') AS value FOR UPDATE")
+      value = (Long) handle.createQuery("SELECT nextval('comment_id_seq') AS value FOR UPDATE")
           .mapToMap()
           .first()
           .get("value");
@@ -48,13 +48,13 @@ public class CommentRepositoryImpl implements CommentRepository {
     Long comment_id;
 
     try (Handle handle = jdbi.open()) {
-      try (Update update = handle.createUpdate("INSERT INTO comment (comment_id, text) VALUES (:comment_id, :text)")) {
+      try (Update update = handle.createUpdate("INSERT INTO comment (id, text) VALUES (:comment_id, :text)")) {
         comment_id = (Long) update.bind("comment_id", comment.getId())
             .bind("text", comment.getText())
-            .executeAndReturnGeneratedKeys("comment_id")
+            .executeAndReturnGeneratedKeys("id")
             .mapToMap()
             .first()
-            .get("comment_id");
+            .get("id");
       } catch (UnableToExecuteStatementException e) {
         throw new CommentDuplicateException(e.getMessage(), e);
       }
@@ -66,7 +66,7 @@ public class CommentRepositoryImpl implements CommentRepository {
   @Override
   public void delete(Long id) throws CommentNotFoundException {
     try (Handle handle = jdbi.open()) {
-      try (Update update = handle.createUpdate("DELETE FROM comment WHERE comment_id=:comment_id")) {
+      try (Update update = handle.createUpdate("DELETE FROM comment WHERE id=:comment_id")) {
         update.bind("comment_id", id)
             .execute();
       } catch (UnableToExecuteStatementException e) {

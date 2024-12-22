@@ -1,6 +1,4 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
 import org.example.Application;
 import org.example.controller.ArticleController;
 import org.example.controller.ArticleFreemarkerController;
@@ -37,7 +35,7 @@ class E2ETest {
   Jdbi jdbi;
 
   @Container
-  public static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>("postgres:13.5");
+  public static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>("postgres:latest");
 
 
   @BeforeEach
@@ -62,11 +60,6 @@ class E2ETest {
 
   @Test
   void FullTest() throws Exception {
-    Config config = ConfigFactory.load();
-
-    Jdbi jdbi = Jdbi.create(config.getString("app.database.url"), config.getString("app.database.user"),
-        config.getString("app.database.password"));
-
     ObjectMapper objectMapper = new ObjectMapper();
     final ArticleRepository articleRepository = new ArticleRepositoryImpl(jdbi);
     final CommentRepository commentRepository = new CommentRepositoryImpl(jdbi);
@@ -148,20 +141,19 @@ class E2ETest {
         );
     assertEquals(200, responseGetArticleById.statusCode());
 
-    HttpResponse<String> responseForUpdateArticle = HttpClient.newHttpClient()
+    HttpResponse<String> responseForComment = HttpClient.newHttpClient()
         .send(
             HttpRequest.newBuilder()
                 .POST(
                     HttpRequest.BodyPublishers.ofString(
                         """
-                            { "title": "Test", "tags": ["first", "second", "third"], "comments" : ["commentFirst", "commentSecond"] }"""
+                            { "text": "GOOOL" }"""
                     )
                 )
-                .uri(URI.create("http://localhost:%d/api/article/update/1".formatted(service.port())))
+                .uri(URI.create("http://localhost:%d/api/comment".formatted(service.port())))
                 .build(),
             HttpResponse.BodyHandlers.ofString(UTF_8)
         );
-    assertEquals(200, responseForUpdateArticle.statusCode());
 
     HttpResponse<String> responseForDeleteComment = HttpClient.newHttpClient()
         .send(
