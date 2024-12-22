@@ -1,8 +1,6 @@
 package org.example.service;
 
 import org.example.entity.Comment;
-import org.example.entity.id.ArticleId;
-import org.example.entity.id.CommentId;
 import org.example.repository.CommentRepository;
 import org.example.repository.exceptions.CommentDuplicateException;
 import org.example.repository.exceptions.CommentNotFoundException;
@@ -25,7 +23,7 @@ public class CommentService {
     return commentRepository.findAll();
   }
 
-  public Comment findById(CommentId id) throws CommentFindException {
+  public Comment findById(long id) throws CommentFindException {
     try {
       return commentRepository.findById(id);
     } catch (CommentNotFoundException e) {
@@ -33,7 +31,7 @@ public class CommentService {
     }
   }
 
-  public void delete(CommentId id) throws CommentFindException {
+  public void delete(long id) throws CommentFindException {
     try {
       commentRepository.delete(id);
     } catch (CommentNotFoundException e) {
@@ -41,9 +39,9 @@ public class CommentService {
     }
   }
 
-  public CommentId create(ArticleId articleId, String text) throws CommentCreateException {
-    CommentId commentId = commentRepository.generateId();
-    Comment comment = new Comment(commentId, articleId, text);
+  public long create(long articleId, String text) throws CommentCreateException {
+    long commentId = commentRepository.generateId();
+    Comment comment = new Comment(commentId, text);
     try {
       commentRepository.create(comment);
     } catch (CommentDuplicateException e) { // маловероятная ошибка мы же генерим уникальные id, хз почему она в примере
@@ -52,7 +50,7 @@ public class CommentService {
     return commentId;
   }
 
-  public void update(CommentId commentId, String text) throws CommentUpdateException {
+  public void update(long commentId, String text) throws CommentUpdateException {
     Comment comment;
     try {
       comment = commentRepository.findById(commentId);

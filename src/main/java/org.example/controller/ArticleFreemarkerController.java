@@ -13,6 +13,7 @@ import spark.template.freemarker.FreeMarkerEngine;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class ArticleFreemarkerController implements Controller {
   private static final Logger LOG = LoggerFactory.getLogger(ArticleFreemarkerController.class);

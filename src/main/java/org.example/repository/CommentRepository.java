@@ -1,19 +1,20 @@
 package org.example.repository;
 
 import org.example.entity.Comment;
-import org.example.entity.id.CommentId;
+import org.example.repository.exceptions.CommentDuplicateException;
+import org.example.repository.exceptions.CommentNotFoundException;
 
 import java.util.HashSet;
 
 public interface CommentRepository {
-  CommentId generateId();
+  long generateId();
 
   HashSet<Comment> findAll();
-  Comment findById(CommentId id);
+  Comment findById(Long id) throws CommentNotFoundException;
 
-  void create(Comment comment);
+  Long create(Comment comment) throws CommentDuplicateException;
 
-  void update(Comment comment);
+  void update(Comment comment) throws CommentNotFoundException;
 
-  void delete(CommentId id);
+  void delete(Long id) throws CommentNotFoundException;
 }

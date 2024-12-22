@@ -1,16 +1,11 @@
 package org.example.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.controller.request.ArticleCreateRequest;
-import org.example.controller.request.ArticleUpdateRequest;
 import org.example.controller.request.CommentCreateRequest;
 import org.example.controller.request.CommentUpdateRequest;
 import org.example.controller.response.CommentCreateResponse;
 import org.example.controller.response.ErrorResponse;
-import org.example.entity.Article;
 import org.example.entity.Comment;
-import org.example.entity.id.ArticleId;
-import org.example.entity.id.CommentId;
 import org.example.service.CommentService;
 import org.example.service.exceptions.*;
 import org.slf4j.Logger;
@@ -54,7 +49,6 @@ public class CommentController implements Controller {
           for (Comment comment : comments) {
             commentList.add(i, new HashMap<>());
             commentList.get(i).put("commentId", String.valueOf(comment.getId()));
-            commentList.get(i).put("articleId", String.valueOf(comment.getArticleId()));
             commentList.get(i).put("text", comment.getText());
           }
           LOG.info("Found {} comments", commentList.size());
@@ -68,12 +62,11 @@ public class CommentController implements Controller {
     service.get("api/comment/:commentId",
         (Request request, Response response) -> {
           response.type("application/json");
-          CommentId commentId = new CommentId(Long.parseLong(request.params("commentId")));
+          long commentId = Long.parseLong(request.params("commentId"));
           try {
             Comment comment = commentService.findById(commentId);
             Map<String, String> commentMap = new HashMap<>();
             commentMap.put("commentId", String.valueOf(comment.getId()));
-            commentMap.put("articleId", String.valueOf(comment.getArticleId()));
             commentMap.put("text", comment.getText());
 
             response.status(200);
@@ -93,7 +86,7 @@ public class CommentController implements Controller {
           String body = request.body();
           CommentCreateRequest commentCreateRequest = objectMapper.readValue(body, CommentCreateRequest.class);
           try {
-            CommentId commentId = commentService.create(commentCreateRequest.articleId(), commentCreateRequest.text());
+            long commentId = commentService.create(commentCreateRequest.articleId(), commentCreateRequest.text());
             LOG.debug("Comment created successfully: {}", commentId);
             response.status(201);
             return objectMapper.writeValueAsString(new CommentCreateResponse(commentId));
@@ -109,7 +102,7 @@ public class CommentController implements Controller {
     service.post("api/comment/update/:commentId",
         (Request request, Response response) -> {
           response.type("application/json");
-          CommentId commentId = new CommentId(Long.parseLong(request.params("commentId")));
+          long commentId = Long.parseLong(request.params("commentId"));
           CommentUpdateRequest commentUpdateRequest = objectMapper.readValue(request.body(), CommentUpdateRequest.class);
           try {
             commentService.update(
@@ -130,11 +123,9 @@ public class CommentController implements Controller {
     service.delete("api/comment/delete/:commentId",
         (Request request, Response response) -> {
           response.type("application/json");
-          CommentId commentId = new CommentId(Long.parseLong(request.params("commentId")));
+          long commentId = Long.parseLong(request.params("commentId"));
           try {
-            commentService.delete(
-                commentId
-            );
+            commentService.delete(commentId);
             response.status(200);
             return objectMapper.writeValueAsString(commentId);
           } catch (CommentDeleteException e) {

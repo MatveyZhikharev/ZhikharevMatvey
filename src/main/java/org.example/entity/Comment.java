@@ -1,32 +1,23 @@
 package org.example.entity;
 
-import org.example.entity.id.ArticleId;
-import org.example.entity.id.CommentId;
-
 public class Comment {
-  private final CommentId id;
-  private final ArticleId articleId;
+  private final long id;
   private final String text;
 
-  public Comment(CommentId id, ArticleId articleId, String text) {
+  public Comment(long id, String text) {
     this.id = id;
-    this.articleId = articleId;
     this.text = text;
   }
 
   public Comment withText(String text) {
-    return new Comment(this.id, this.articleId, text);
+    return new Comment(this.id, text);
   }
 
   public String getText() {
     return text;
   }
 
-  public CommentId getId() {
+  public long getId() {
     return id;
-  }
-
-  public ArticleId getArticleId() {
-    return articleId;
   }
 }

@@ -1,22 +1,22 @@
 package org.example.entity;
 
-import org.example.entity.id.ArticleId;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 public class Article {
-  private final ArticleId id;
+  private final long id;
   private final String title;
   private final Set<String> tags;
   private final List<Comment> comments;
+  private final boolean trending;
 
-  public Article(ArticleId id, String title, Set<String> tags, List<Comment> comments) {
+  public Article(long id, String title, Set<String> tags, List<Comment> comments) {
     this.id = id;
     this.title = title;
     this.tags = tags;
     this.comments = comments;
+    this.trending = comments.size() >= 3;
   }
 
   public Article withTags(Set<String> tags) {
@@ -31,7 +31,7 @@ public class Article {
     return new Article(this.id, this.title, this.tags, comments);
   }
 
-  public ArticleId getId() {
+  public Long getId() {
     return id;
   }
 
@@ -45,6 +45,10 @@ public class Article {
 
   public List<Comment> getComments() {
     return comments;
+  }
+
+  public boolean getTrending() {
+    return trending;
   }
 
   @Override

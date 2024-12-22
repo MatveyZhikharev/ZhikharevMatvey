@@ -7,8 +7,6 @@ import org.example.controller.response.ArticleCreateResponse;
 import org.example.controller.response.ErrorResponse;
 import org.example.entity.Article;
 import org.example.entity.Comment;
-import org.example.entity.id.ArticleId;
-import org.example.entity.id.CommentId;
 import org.example.service.ArticleService;
 import org.example.service.exceptions.ArticleCreateException;
 import org.example.service.exceptions.ArticleDeleteException;
@@ -20,10 +18,7 @@ import spark.Request;
 import spark.Response;
 import spark.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ArticleController implements Controller {
   private static final Logger LOG = LoggerFactory.getLogger(ArticleController.class);
@@ -79,7 +74,7 @@ public class ArticleController implements Controller {
     service.get("api/article/:articleId",
         (Request request, Response response) -> {
           response.type("application/json");
-          ArticleId articleId = new ArticleId(Long.parseLong(request.params("articleId")));
+          long articleId = Long.parseLong(request.params("articleId"));
           try {
             Article article = articleService.findById(articleId);
             Map<String, String> articleMap = new HashMap<>();
@@ -110,7 +105,7 @@ public class ArticleController implements Controller {
           String body = request.body();
           ArticleCreateRequest articleCreateRequest = objectMapper.readValue(body, ArticleCreateRequest.class);
           try {
-            ArticleId articleId = articleService.create(articleCreateRequest.title(), articleCreateRequest.tags());
+            long articleId = articleService.create(articleCreateRequest.title(), articleCreateRequest.tags());
             LOG.debug("Article created successfully: {}", articleId);
             response.status(201);
             return objectMapper.writeValueAsString(new ArticleCreateResponse(articleId));
@@ -126,13 +121,13 @@ public class ArticleController implements Controller {
     service.post("api/article/update/:articleId",
         (Request request, Response response) -> {
           response.type("application/json");
-          ArticleId articleId = new ArticleId(Long.parseLong(request.params("articleId")));
+          long articleId = Long.parseLong(request.params("articleId"));
           ArticleUpdateRequest articleUpdateRequest = objectMapper.readValue(request.body(), ArticleUpdateRequest.class);
           try {
             List<Comment> commentList = new ArrayList<>();
             int comId = 0;
             for (String comment : articleUpdateRequest.comments()) {
-              commentList.add(new Comment(new CommentId(comId), articleId, comment));
+              commentList.add(new Comment(comId, comment));
               comId++;
             }
             articleService.update(
@@ -155,7 +150,7 @@ public class ArticleController implements Controller {
     service.delete("api/article/delete/:articleId",
         (Request request, Response response) -> {
           response.type("application/json");
-          ArticleId articleId = new ArticleId(Long.parseLong(request.params("articleId")));
+          long articleId = Long.parseLong(request.params("articleId"));
           try {
             articleService.delete(
                 articleId

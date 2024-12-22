@@ -6,12 +6,12 @@ import org.example.service.exceptions.ArticleCreateException;
 import org.example.service.exceptions.ArticleDeleteException;
 import org.example.service.exceptions.ArticleFindException;
 import org.example.entity.Article;
-import org.example.entity.id.ArticleId;
 import org.example.repository.ArticleRepository;
 import org.example.repository.exceptions.ArticleNotFoundException;
 import org.example.service.exceptions.ArticleUpdateException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class ArticleService {
@@ -25,7 +25,7 @@ public class ArticleService {
     return articleRepository.findAll();
   }
 
-  public Article findById(ArticleId id) throws ArticleFindException {
+  public Article findById(Long id) throws ArticleFindException {
     try {
       return articleRepository.findById(id);
     } catch (ArticleNotFoundException e) {
@@ -33,7 +33,7 @@ public class ArticleService {
     }
   }
 
-  public void delete(ArticleId id) throws ArticleFindException {
+  public void delete(long id) throws ArticleFindException {
     try {
       articleRepository.delete(id);
     } catch (ArticleNotFoundException e) {
@@ -41,8 +41,8 @@ public class ArticleService {
     }
   }
 
-  public ArticleId create(String title, Set<String> tags) throws ArticleCreateException {
-    ArticleId articleId = articleRepository.generateId();
+  public long create(String title, Set<String> tags) throws ArticleCreateException {
+    long articleId = articleRepository.generateId().get();
     Article article = new Article(articleId, title, tags, null);
     try {
       articleRepository.create(article);
@@ -52,7 +52,7 @@ public class ArticleService {
     return articleId;
   }
 
-  public void update(ArticleId articleId, String title, Set<String> tags, List<Comment> comments) throws ArticleUpdateException {
+  public void update(long articleId, String title, Set<String> tags, List<Comment> comments) throws ArticleUpdateException {
     Article article;
     try {
       article = articleRepository.findById(articleId);

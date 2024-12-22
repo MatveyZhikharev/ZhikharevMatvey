@@ -1,20 +1,22 @@
 package org.example.repository;
 
 import org.example.entity.Article;
-import org.example.entity.id.ArticleId;
+import org.example.repository.exceptions.ArticleDuplicateException;
+import org.example.repository.exceptions.ArticleNotFoundException;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public interface ArticleRepository {
-  ArticleId generateId();
+  Optional<Long> generateId();
 
-  ArrayList<Article> findAll();
+  List<Article> findAll();
 
-  Article findById(ArticleId id);
+  Article findById(Long id) throws ArticleNotFoundException;
 
-  void create(Article article);
+  Long create(Article article) throws ArticleDuplicateException;
 
-  void update(Article article);
+  void update(Article article) throws ArticleNotFoundException;
 
-  void delete(ArticleId id);
+  void delete(Long id) throws ArticleNotFoundException;
 }
