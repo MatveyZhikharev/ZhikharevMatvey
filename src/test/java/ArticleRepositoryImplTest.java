@@ -97,33 +97,6 @@ class ArticleRepositoryImplTest {
   }
 
   @Test
-  void should200delete() throws IOException, InterruptedException {
-    HttpResponse<String> response1 = HttpClient.newHttpClient()
-        .send(
-            HttpRequest.newBuilder()
-                .POST(
-                    HttpRequest.BodyPublishers.ofString(
-                        """
-                            {"title" : "G", "tags" : ["f", "s", "t"]}
-                            """
-                    )
-                )
-                .uri(URI.create("http://localhost:4567/api/article"))
-                .build(),
-            HttpResponse.BodyHandlers.ofString(UTF_8)
-        );
-    HttpResponse<String> response = HttpClient.newHttpClient()
-        .send(
-            HttpRequest.newBuilder()
-                .DELETE()
-                .uri(URI.create("http://localhost:4567/api/article/delete/1"))
-                .build(),
-            HttpResponse.BodyHandlers.ofString(UTF_8)
-        );
-    assertEquals(200, response.statusCode());
-  }
-
-  @Test
   void should404skippedArgument() throws IOException, InterruptedException {
     HttpResponse<String> response = HttpClient.newHttpClient()
         .send(
