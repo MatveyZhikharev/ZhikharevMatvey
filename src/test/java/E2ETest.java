@@ -12,10 +12,14 @@ import org.example.repository.CommentRepositoryImpl;
 import org.example.service.ArticleService;
 import org.example.service.CommentService;
 import org.example.template.TemplateFactory;
+import org.flywaydb.core.Flyway;
 import org.jdbi.v3.core.Jdbi;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import spark.Service;
 
 import java.net.URI;
@@ -27,12 +31,26 @@ import java.util.List;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Testcontainers
 class E2ETest {
   private Service service;
+  Jdbi jdbi;
+
+  @Container
+  public static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>("postgres:13.5");
 
 
   @BeforeEach
   void beforeEach() {
+    String postgresJdbcUrl = POSTGRES.getJdbcUrl();
+    Flyway flyway =
+        Flyway.configure()
+            .outOfOrder(true)
+            .locations("classpath:db/migrations")
+            .dataSource(postgresJdbcUrl, POSTGRES.getUsername(), POSTGRES.getPassword())
+            .load();
+    flyway.migrate();
+    jdbi = Jdbi.create(postgresJdbcUrl, POSTGRES.getUsername(), POSTGRES.getPassword());
     service = Service.ignite();
   }
 

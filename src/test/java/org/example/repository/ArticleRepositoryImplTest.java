@@ -77,7 +77,7 @@ class ArticleRepositoryImplTest {
   }
 
   @Test
-  void should400skippedArgument() throws IOException, InterruptedException {
+  void should404skippedArgument() throws IOException, InterruptedException {
     HttpResponse<String> response = HttpClient.newHttpClient()
         .send(
             HttpRequest.newBuilder()
@@ -93,11 +93,11 @@ class ArticleRepositoryImplTest {
             HttpResponse.BodyHandlers.ofString(UTF_8)
         );
 
-    assertEquals(400, response.statusCode());
+    assertEquals(404, response.statusCode());
   }
 
   @Test
-  void should400undefinedComment() throws IOException, InterruptedException {
+  void should404undefinedComment() throws IOException, InterruptedException {
     HttpResponse<String> response = HttpClient.newHttpClient()
         .send(
             HttpRequest.newBuilder()
@@ -107,6 +107,6 @@ class ArticleRepositoryImplTest {
             HttpResponse.BodyHandlers.ofString(UTF_8)
         );
 
-    assertEquals(400, response.statusCode());
+    assertEquals(404, response.statusCode());
   }
 }
