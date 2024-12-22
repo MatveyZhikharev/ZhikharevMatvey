@@ -120,7 +120,6 @@ class ArticleRepositoryImplTest {
                 .build(),
             HttpResponse.BodyHandlers.ofString(UTF_8)
         );
-
     assertEquals(200, response.statusCode());
   }
 
