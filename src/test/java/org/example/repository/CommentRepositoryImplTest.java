@@ -77,6 +77,27 @@ class CommentRepositoryImplTest {
   }
 
   @Test
+  void should201create() throws IOException, InterruptedException {
+    HttpResponse<String> response = HttpClient.newHttpClient()
+        .send(
+            HttpRequest.newBuilder()
+                .POST(
+                    HttpRequest.BodyPublishers.ofString(
+                        """
+                            {"text" : "GOOOL"}
+                            """
+                    )
+                )
+                .uri(URI.create("http://localhost:4567/api/comment"))
+                .build(),
+            HttpResponse.BodyHandlers.ofString(UTF_8)
+        );
+
+    assertEquals(201, response.statusCode());
+  }
+
+
+  @Test
   void should400skippedArgument() throws IOException, InterruptedException {
     HttpResponse<String> response = HttpClient.newHttpClient()
         .send(
