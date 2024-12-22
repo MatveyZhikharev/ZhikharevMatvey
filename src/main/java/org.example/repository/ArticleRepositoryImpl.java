@@ -143,12 +143,12 @@ public class ArticleRepositoryImpl implements ArticleRepository {
     Long article_id;
 
     try (Handle handle = jdbi.open()) {
-      try (Update update = handle.createUpdate("DELETE FROM article WHERE article_id=:article_id")) {
+      try (Update update = handle.createUpdate("DELETE FROM article WHERE id=:article_id")) {
         article_id = (Long) update.bind("article_id", id)
-            .executeAndReturnGeneratedKeys("article_id")
+            .executeAndReturnGeneratedKeys("id")
             .mapToMap()
             .first()
-            .get("article_id");
+            .get("id");
       } catch (IllegalStateException e) {
         throw new ArticleNotFoundException(e.getMessage(), e);
       }

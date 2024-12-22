@@ -1,10 +1,10 @@
-package org.example.repository;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.Application;
 import org.example.controller.ArticleController;
 import org.example.controller.ArticleFreemarkerController;
 import org.example.controller.CommentController;
+import org.example.repository.ArticleRepositoryImpl;
+import org.example.repository.CommentRepositoryImpl;
 import org.example.service.ArticleService;
 import org.example.service.CommentService;
 import org.example.template.TemplateFactory;
@@ -94,6 +94,34 @@ class ArticleRepositoryImplTest {
         );
 
     assertEquals(201, response.statusCode());
+  }
+
+  @Test
+  void should200delete() throws IOException, InterruptedException {
+    HttpResponse<String> response1 = HttpClient.newHttpClient()
+        .send(
+            HttpRequest.newBuilder()
+                .POST(
+                    HttpRequest.BodyPublishers.ofString(
+                        """
+                            {"title" : "G", "tags" : ["f", "s", "t"]}
+                            """
+                    )
+                )
+                .uri(URI.create("http://localhost:4567/api/article"))
+                .build(),
+            HttpResponse.BodyHandlers.ofString(UTF_8)
+        );
+    HttpResponse<String> response = HttpClient.newHttpClient()
+        .send(
+            HttpRequest.newBuilder()
+                .DELETE()
+                .uri(URI.create("http://localhost:4567/api/article/delete/1"))
+                .build(),
+            HttpResponse.BodyHandlers.ofString(UTF_8)
+        );
+
+    assertEquals(200, response.statusCode());
   }
 
   @Test

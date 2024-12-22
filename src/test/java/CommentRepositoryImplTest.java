@@ -1,10 +1,10 @@
-package org.example.repository;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.Application;
 import org.example.controller.ArticleController;
 import org.example.controller.ArticleFreemarkerController;
 import org.example.controller.CommentController;
+import org.example.repository.ArticleRepositoryImpl;
+import org.example.repository.CommentRepositoryImpl;
 import org.example.service.ArticleService;
 import org.example.service.CommentService;
 import org.example.template.TemplateFactory;
